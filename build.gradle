@@ -37,6 +37,9 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
+
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.40.0.0'
+    testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.10.0'
 }
 
 test {
