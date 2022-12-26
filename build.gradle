@@ -38,6 +38,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
+    implementation group: 'javax.persistence', name: 'javax.persistence-api', version: '2.2'
     implementation group: 'org.hibernate', name: 'hibernate-core', version: '6.1.6.Final', ext: 'pom'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.40.0.0'
     testImplementation group: 'org.mockito', name: 'mockito-core', version: '4.10.0'
