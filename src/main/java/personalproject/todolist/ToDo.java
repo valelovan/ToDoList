@@ -11,6 +11,7 @@ public class ToDo {
     private Date dateCreated;
     private Date dateDue;
     private List<ToDo> relatedToDos;
+    private boolean isComplete;
 
     /**
      * ID field getter.
@@ -122,9 +123,30 @@ public class ToDo {
         this.relatedToDos = relatedToDos;
     }
 
+    /**
+     * Adds a ToDo to the related ToDos list.
+     * @param todo ToDo to be added.
+     */
     public void addRelatedToDo(ToDo todo) {
         if (null == todo)
             throw new IllegalArgumentException("Null ToDo is not accepted.");
         this.relatedToDos.add(todo);
     }
+
+    /**
+     * IsComplete field getter.
+     * @return Boolean indicating status of IsComplete.
+     */
+    public boolean getIsComplete() {return isComplete;}
+
+    /**
+     * IsComplete field setter.
+     * @param isComplete Boolean indicating new status of IsComplete.
+     */
+    public void setIsComplete(boolean isComplete) {this.isComplete = isComplete;}
+
+    /**
+     * Toggles IsComplete status from true to false and vice versa.
+     */
+    public void toggleIsComplete() {isComplete = !isComplete;}
 }

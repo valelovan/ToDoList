@@ -73,7 +73,14 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
         return null;
     }
 
+    @Override
+    public List<ToDo> selectRelatedToDos(int id) {
+        return null;
+    }
+
     public void close() {
         // Todo
     }
+
+
 }
