@@ -1,4 +1,4 @@
 package personalproject.todolist.Backend;
 
-public class DatabaseManagerSQLite {
+public class DatabaseManagerSQLite implements DatabaseManagerInterface {
 }
