@@ -1,10 +1,11 @@
 package personalproject.todolist.Backend;
 
 public class DatabaseManagerFactory {
-    enum DatabaseType {SQLITE}
-    public DatabaseManagerInterface getDatabaseManager(DatabaseType dbType) {
+    public DatabaseManagerInterface getDatabaseManager(String dbType) {
         return switch (dbType) {
-            case SQLITE -> new DatabaseManagerSQLite();
+            case "SQLite" -> new DatabaseManagerSQLite();
+            default -> throw new IllegalArgumentException("Invalid database type. Currently [" + dbType +
+                    "] is unsupported.");
         };
     }
 }

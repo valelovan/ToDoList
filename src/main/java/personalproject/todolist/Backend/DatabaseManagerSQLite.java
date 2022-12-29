@@ -1,4 +1,13 @@
 package personalproject.todolist.Backend;
 
-public class DatabaseManagerSQLite implements DatabaseManagerInterface {
+import java.io.Closeable;
+
+public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeable {
+    public void connect() {
+        // Todo
+    }
+
+    public void close() {
+        // Todo
+    }
 }
