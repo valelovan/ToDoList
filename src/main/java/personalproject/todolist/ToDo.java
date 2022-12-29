@@ -34,7 +34,11 @@ public class ToDo {
      * Group field setter.
      * @param group New Group.
      */
-    public void setGroup(String group) {this.group = group;}
+    public void setGroup(String group) {
+        if (null == group)
+            throw new IllegalArgumentException("Null group is not accepted.");
+        this.group = group;
+    }
 
     /**
      * Title field getter.
@@ -46,7 +50,11 @@ public class ToDo {
      * Title field setter.
      * @param title New Title.
      */
-    public void setTitle(String title) {this.title = title;}
+    public void setTitle(String title) {
+        if (null == title)
+            throw new IllegalArgumentException("Null title is not accepted.");
+        this.title = title;
+    }
 
     /**
      * Description field getter.
@@ -58,7 +66,11 @@ public class ToDo {
      * Description field setter.
      * @param description New Description.
      */
-    public void setDescription(String description) {this.description = description;}
+    public void setDescription(String description) {
+        if (null == description)
+            throw new IllegalArgumentException("Null description is not accepted.");
+        this.description = description;
+    }
 
     /**
      * DateCreated field getter.
@@ -70,7 +82,11 @@ public class ToDo {
      * DateCreated field setter.
      * @param dateCreated New DateCreated.
      */
-    public void setDateCreated(Date dateCreated) {this.dateCreated = dateCreated;}
+    public void setDateCreated(Date dateCreated) {
+        if (null == dateCreated)
+            throw new IllegalArgumentException("Null date created is not accepted.");
+        this.dateCreated = dateCreated;
+    }
 
     /**
      * DateDue field getter.
@@ -82,7 +98,11 @@ public class ToDo {
      * DateDue field setter.
      * @param dateDue New DateDue.
      */
-    public void setDateDue(Date dateDue) {this.dateDue = dateDue;}
+    public void setDateDue(Date dateDue) {
+        if (null == dateDue)
+            throw new IllegalArgumentException("Null date due is not accepted.");
+        this.dateDue = dateDue;
+    }
 
     /**
      * RelatedToDos field getter.
@@ -94,6 +114,17 @@ public class ToDo {
      * RelatedToDos field setter.
      * @param relatedToDos List of related ToDos.
      */
-    public void setRelatedToDos(List<ToDo> relatedToDos) {this.relatedToDos = relatedToDos;}
+    public void setRelatedToDos(List<ToDo> relatedToDos) {
+        if (null == relatedToDos)
+            throw new IllegalArgumentException("Null ToDo list is not accepted.");
+        if (relatedToDos.contains(null))
+            throw new IllegalArgumentException("Null ToDo in the list is not accepted");
+        this.relatedToDos = relatedToDos;
+    }
 
+    public void addRelatedToDo(ToDo todo) {
+        if (null == todo)
+            throw new IllegalArgumentException("Null ToDo is not accepted.");
+        this.relatedToDos.add(todo);
+    }
 }
