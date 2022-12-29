@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class ToDo {
     private int id;
+    private String group;
     private String title;
     private String description;
     private Date dateCreated;
@@ -22,6 +23,18 @@ public class ToDo {
     public void setId(int id) {this.id = id;}
 
     /**
+     * Group field getter.
+     * @return ToDo's Group.
+     */
+    public String getGroup() {return group;}
+
+    /**
+     * Group field setter.
+     * @param group New Group.
+     */
+    public void setGroup(String group) {this.group = group;}
+
+    /**
      * Title field getter.
      * @return ToDo's Title.
      */
@@ -31,7 +44,7 @@ public class ToDo {
      * Title field setter.
      * @param title New Title.
      */
-    public void setString(String title) {this.title = title;}
+    public void setTitle(String title) {this.title = title;}
 
     /**
      * Description field getter.
