@@ -84,4 +84,11 @@ public interface DatabaseManagerInterface {
      * @return List of all ToDos from the group.
      */
     public List<ToDo> selectAllTodos(String groupTitle);
+
+    /**
+     * Selects all ToDos that are related to the ToDo associated with the given ID.
+     * @param id ID of the specific ToDo.
+     * @return List of all related ToDos.
+     */
+    public List<ToDo> selectRelatedToDos(int id);
 }
