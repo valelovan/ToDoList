@@ -59,6 +59,12 @@ public interface DatabaseManagerInterface {
     public ToDo selectToDo(String todoTitle);
 
     /**
+     * Deletes ToDo from tables given ToDo ID.
+     * @param id ID of the ToDo.
+     */
+    public void deleteToDo(int id);
+
+    /**
      * Selects all ToDos from the table and returns them in a list.
      * @return List of all ToDos.
      */
