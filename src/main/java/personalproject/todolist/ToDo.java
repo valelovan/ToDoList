@@ -1,6 +1,7 @@
 package personalproject.todolist;
 
 import java.util.Date;
+import java.util.List;
 
 public class ToDo {
     private int id;
@@ -9,6 +10,7 @@ public class ToDo {
     private String description;
     private Date dateCreated;
     private Date dateDue;
+    private List<ToDo> relatedToDos;
 
     /**
      * ID field getter.
@@ -81,4 +83,17 @@ public class ToDo {
      * @param dateDue New DateDue.
      */
     public void setDateDue(Date dateDue) {this.dateDue = dateDue;}
+
+    /**
+     * RelatedToDos field getter.
+     * @return List of related ToDos.
+     */
+    public List<ToDo> getRelatedToDos() {return relatedToDos;}
+
+    /**
+     * RelatedToDos field setter.
+     * @param relatedToDos List of related ToDos.
+     */
+    public void setRelatedToDos(List<ToDo> relatedToDos) {this.relatedToDos = relatedToDos;}
+
 }
