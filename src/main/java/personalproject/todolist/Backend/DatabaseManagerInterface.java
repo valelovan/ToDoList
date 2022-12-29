@@ -39,6 +39,12 @@ public interface DatabaseManagerInterface {
     public void deleteGroup(String groupName);
 
     /**
+     * Selects all Group titles from the tables.
+     * @return List of Group titles.
+     */
+    public List<String> selectAllGroups();
+
+    /**
      * Check if there is a group with the given title in the database.
      * @param groupName Title of the ToDo group.
      * @return True if there is a group with the given title, false otherwise.

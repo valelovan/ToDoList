@@ -39,6 +39,11 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     @Override
+    public List<String> selectAllGroups() {
+        return null;
+    }
+
+    @Override
     public boolean groupExists(String groupName) {
         return false;
     }
