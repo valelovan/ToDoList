@@ -30,13 +30,13 @@ public interface DatabaseManagerInterface {
      * Adds a new group to the ToDo group table.
      * @param groupName Name of the new ToDo group.
      */
-    public void addGroup(String groupName);
+    public void insertGroup(String groupName);
 
     /**
      * Removes a group from the ToDo group table.
      * @param groupName Name of the ToDo group.
      */
-    public void removeGroup(String groupName);
+    public void deleteGroup(String groupName);
 
     /**
      * Check if there is a group with the given title in the database.
