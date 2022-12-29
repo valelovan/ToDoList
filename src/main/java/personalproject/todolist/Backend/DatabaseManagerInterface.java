@@ -72,9 +72,10 @@ public interface DatabaseManagerInterface {
     public List<ToDo> selectAllTodos();
 
     /**
-     * Selects all ToDos with the given group title from the table.
+     * Selects all ToDos with the given group title from the table and returns
+     * them in a list.
      * @param groupTitle Title of the ToDo group.
      * @return List of all ToDos from the group.
      */
-    public List<ToDo> selectAllTodosFromGroup(String groupTitle);
+    public List<ToDo> selectAllTodos(String groupTitle);
 }
