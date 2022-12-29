@@ -52,11 +52,12 @@ public interface DatabaseManagerInterface {
     public void insertToDo(ToDo todo);
 
     /**
-     * Selects ToDo from tables given ToDo title.
-     * @param todoTitle Title of the ToDo.
-     * @return ToDo object with the provided title.
+     * Selects ToDos from tables given ToDos title (titles might not be unique).
+     * This method will look for the title as a substring of all titles.
+     * @param todoTitle Title of the ToDos.
+     * @return List of ToDo objects with the provided title.
      */
-    public ToDo selectToDo(String todoTitle);
+    public List<ToDo> selectToDos(String todoTitle);
 
     /**
      * Deletes ToDo from tables given ToDo ID.
