@@ -28,7 +28,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     /**
      * The database name.
      */
-    private String DATABASE_NAME = "Todos.sqlite3";
+    private final String DATABASE_NAME = "Todos.sqlite3";
     /**
      * Database connection.
      */
