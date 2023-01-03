@@ -85,41 +85,5 @@ public interface DatabaseManagerInterface {
      */
     public List<ToDo> selectAllTodos(String groupTitle);
 
-    /**
-     * Selects all ToDos that are related to the ToDo associated with the given ID.
-     * @param id ID of the specific ToDo.
-     * @return List of all related ToDos.
-     */
-    public List<ToDo> selectRelatedToDos(int id);
 
-    /**
-     * Inserts a one-way relationship between the two given ToDos
-     * (Second is related to first, but not vice versa).
-     * @param firstToDo First ToDo object.
-     * @param secondToDo Second ToDo Object.
-     */
-    public void insertRelationship(ToDo firstToDo, ToDo secondToDo);
-
-    /**
-     * Inserts a mutual relationship between the two given ToDos.
-     * @param firstToDo First ToDo object.
-     * @param secondToDo Second ToDo Object.
-     */
-    public void insertMutualRelationship(ToDo firstToDo, ToDo secondToDo);
-
-    /**
-     * Checks if two ToDos have a one-way relationship with each other.
-     * @param firstToDo First ToDo object.
-     * @param secondToDo Second ToDo object.
-     * @return True if a one-way relationship exists, false otherwise.
-     */
-    public boolean hasRelationship(ToDo firstToDo, ToDo secondToDo);
-
-    /**
-     * Checks if two ToDos have a mutual relationship with each other.
-     * @param firstToDo First ToDo object.
-     * @param secondToDo Second ToDo object.
-     * @return True if a mutual relationship exists, false otherwise.
-     */
-    public boolean hasMutualRelationship(ToDo firstToDo, ToDo secondToDo);
 }
