@@ -10,7 +10,6 @@ public class ToDo {
     private String description;
     private Date dateCreated;
     private Date dateDue;
-    private List<ToDo> relatedToDos;
     private boolean isComplete;
 
     /**
@@ -103,34 +102,6 @@ public class ToDo {
         if (null == dateDue)
             throw new IllegalArgumentException("Null date due is not accepted.");
         this.dateDue = dateDue;
-    }
-
-    /**
-     * RelatedToDos field getter.
-     * @return List of related ToDos.
-     */
-    public List<ToDo> getRelatedToDos() {return relatedToDos;}
-
-    /**
-     * RelatedToDos field setter.
-     * @param relatedToDos List of related ToDos.
-     */
-    public void setRelatedToDos(List<ToDo> relatedToDos) {
-        if (null == relatedToDos)
-            throw new IllegalArgumentException("Null ToDo list is not accepted.");
-        if (relatedToDos.contains(null))
-            throw new IllegalArgumentException("Null ToDo in the list is not accepted");
-        this.relatedToDos = relatedToDos;
-    }
-
-    /**
-     * Adds a ToDo to the related ToDos list.
-     * @param todo ToDo to be added.
-     */
-    public void addRelatedToDo(ToDo todo) {
-        if (null == todo)
-            throw new IllegalArgumentException("Null ToDo is not accepted.");
-        this.relatedToDos.add(todo);
     }
 
     /**
