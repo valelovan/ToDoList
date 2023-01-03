@@ -2,11 +2,41 @@ package personalproject.todolist.Backend;
 
 import personalproject.todolist.ToDo;
 
+import java.sql.*;
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.List;
 
 public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeable {
+
+    /**
+     * The singleton's instance.
+     */
+    private static DatabaseManagerSQLite instance;
+
+    /**
+     * DatabaseManagerSQLite is a singleton. Must use this method to retrieve
+     * the instance of the database manager (this creates a global access point
+     * and prevents multiple instances trying to access the database).
+     * @return Instance of the database manager.
+     */
+    public static DatabaseManagerSQLite getInstance() {
+        if (null == instance) instance = new DatabaseManagerSQLite();
+        return instance;
+    }
+
+
+    /**
+     * The database name.
+     */
+    private String DATABASE_NAME = "Todos.sqlite3";
+    /**
+     * Database connection.
+     */
+    private Connection connection;
+
+    private DatabaseManagerSQLite() {
+        // Private constructor for singleton design pattern
+    }
 
 
     @Override
