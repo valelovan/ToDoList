@@ -3,10 +3,16 @@ package personalproject.todolist.Backend;
 import personalproject.todolist.ToDo;
 
 import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 
 public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeable {
 
+
+    @Override
+    public void close() {
+
+    }
 
     @Override
     public void connect() {
@@ -74,13 +80,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     @Override
-    public List<ToDo> selectRelatedToDos(int id) {
+    public List<ToDo> selectAllIncompleteToDos() {
         return null;
     }
-
-    public void close() {
-        // Todo
-    }
-
-
 }

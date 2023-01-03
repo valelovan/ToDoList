@@ -85,5 +85,9 @@ public interface DatabaseManagerInterface {
      */
     public List<ToDo> selectAllTodos(String groupTitle);
 
-
+    /**
+     * Selects all ToDos which are not completed.
+     * @return List of all incomplete ToDos.
+     */
+    public List<ToDo> selectAllIncompleteToDos();
 }
