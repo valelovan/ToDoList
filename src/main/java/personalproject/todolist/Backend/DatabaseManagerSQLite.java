@@ -46,7 +46,12 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void close() {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        try {
+            connection.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
