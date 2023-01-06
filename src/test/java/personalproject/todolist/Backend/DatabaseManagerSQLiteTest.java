@@ -32,13 +32,23 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void close();
     @Test
-    public void testCloseNotConnected() {
-        //
+    public void testCloseNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> testDB.close());
+
+        verify(testConnection, times(1)).isClosed();
+        verify(testConnection, never()).close();
     }
 
     @Test
-    public void testCloseConnected() {
-        //
+    public void testCloseConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(false);
+
+        testDB.close();
+
+        verify(testConnection, times(1)).isClosed();
+        verify(testConnection, times(1)).close();
     }
 
     // TESTS: public void connect();
