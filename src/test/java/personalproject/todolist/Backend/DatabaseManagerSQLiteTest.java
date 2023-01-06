@@ -1,15 +1,18 @@
 package personalproject.todolist.Backend;
 
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 import personalproject.todolist.Backend.DatabaseManagerSQLite;
-
+import static org.junit.Assert.*;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DatabaseManagerSQLiteTest {
-
+    private final String dbName = "Todos.sqlite3";
     private Connection testConnection;
     private DatabaseManagerSQLite testDB;
 
@@ -21,10 +24,30 @@ public class DatabaseManagerSQLiteTest {
     }
 
     // TESTS: public void close();
+    @Test
+    public void testCloseNotConnected() {
+        //
+    }
 
+    @Test
+    public void testCloseConnected() {
+        //
+    }
 
     // TESTS: public void connect();
+    @Test
+    public void testConnectNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(false);
 
+        testDB.connect();
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testConnectConnected() {
+        //
+    }
 
     // TESTS: public void createTables();
 
