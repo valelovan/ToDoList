@@ -65,7 +65,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void createTables() {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
     }
 
     @Override
