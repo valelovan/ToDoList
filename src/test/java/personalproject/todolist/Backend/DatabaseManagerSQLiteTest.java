@@ -5,9 +5,8 @@ import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import personalproject.todolist.Backend.DatabaseManagerSQLite;
 import static org.junit.Assert.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+
+import java.sql.*;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -17,12 +16,16 @@ public class DatabaseManagerSQLiteTest {
     private final String dbName = "Todos.sqlite3";
     private Connection testConnection;
     private DatabaseManagerSQLite testDB;
+    private ResultSet testResultSet;
+    private DatabaseMetaData testMetaData;
 
     @BeforeAll
     public void initSetup() {
         testConnection = mock(Connection.class);
         testDB = DatabaseManagerSQLite.getInstance();
         testDB.connection = testConnection;
+        testResultSet = mock(ResultSet.class);
+        testMetaData = mock(DatabaseMetaData.class);
     }
 
     @BeforeEach
@@ -93,8 +96,12 @@ public class DatabaseManagerSQLiteTest {
     }
 
     @Test
-    public void testCreateTablesTablesExist() {
-        //
+    public void testCreateTablesTablesExist() throws SQLException {
+        setTablesExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.createTables());
+
+        verifyTablesExist();
     }
 
     @Test
@@ -136,4 +143,30 @@ public class DatabaseManagerSQLiteTest {
 
 
     // TESTS: public List<ToDo> selectAllIncompleteToDos();
+
+    // MISC TEST HELPER METHDOS
+
+    private void setTablesExist() throws SQLException {
+        when(testMetaData.getTables(null, null, "Todo", null))
+                .thenReturn(testResultSet);
+        when(testMetaData.getTables(null, null, "Group", null))
+                .thenReturn(testResultSet);
+        when(testResultSet.next()).thenReturn(true);
+    }
+
+    private void setTablesDoNotExist() throws SQLException {
+        when(testMetaData.getTables(null, null, "Todo", null))
+                .thenReturn(testResultSet);
+        when(testMetaData.getTables(null, null, "Group", null))
+                .thenReturn(testResultSet);
+        when(testResultSet.next()).thenReturn(false);
+    }
+
+    private void verifyTablesExist() throws SQLException {
+        verify(testMetaData, times(1))
+                .getTables(null, null, "Todo", null);
+        verify(testMetaData, times(1))
+                .getTables(null, null, "Group", null);
+        verify(testResultSet, times(2)).next();
+    }
 }
