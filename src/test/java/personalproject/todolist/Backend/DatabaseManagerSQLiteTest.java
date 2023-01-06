@@ -18,6 +18,7 @@ public class DatabaseManagerSQLiteTest {
     private DatabaseManagerSQLite testDB;
     private ResultSet testResultSet;
     private DatabaseMetaData testMetaData;
+    private Statement testStatement;
 
     @BeforeAll
     public void initSetup() {
@@ -26,6 +27,7 @@ public class DatabaseManagerSQLiteTest {
         testDB.connection = testConnection;
         testResultSet = mock(ResultSet.class);
         testMetaData = mock(DatabaseMetaData.class);
+        testStatement = mock(Statement.class);
     }
 
     @BeforeEach
@@ -105,8 +107,12 @@ public class DatabaseManagerSQLiteTest {
     }
 
     @Test
-    public void testCreateTablesNoTables() {
+    public void testCreateTablesNoTables() throws SQLException {
+        setTablesDoNotExist();
+
         //
+
+        verifyTablesExist();
     }
 
     // TESTS: public void clearTables();
