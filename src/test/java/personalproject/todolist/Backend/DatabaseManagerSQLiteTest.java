@@ -83,7 +83,24 @@ public class DatabaseManagerSQLiteTest {
     }
 
     // TESTS: public void createTables();
+    @Test
+    public void testCreateTablesNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
 
+        assertThrows(IllegalStateException.class, () -> testDB.createTables());
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testCreateTablesTablesExist() {
+        //
+    }
+
+    @Test
+    public void testCreateTablesNoTables() {
+        //
+    }
 
     // TESTS: public void clearTables();
 
