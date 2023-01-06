@@ -1,6 +1,8 @@
 package personalproject.todolist.Backend;
 
 import org.junit.jupiter.api.*;
+import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
 import personalproject.todolist.Backend.DatabaseManagerSQLite;
 import static org.junit.Assert.*;
 import java.sql.Connection;
@@ -23,6 +25,11 @@ public class DatabaseManagerSQLiteTest {
         testDB.connection = testConnection;
     }
 
+    @BeforeEach
+    public void beforeEach() {
+        testDB.connection = testConnection;
+    }
+
     // TESTS: public void close();
     @Test
     public void testCloseNotConnected() {
@@ -38,9 +45,11 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testConnectNotConnected() throws SQLException {
         when(testConnection.isClosed()).thenReturn(false);
+        mockStatic(DriverManager.class);
+        //BDDMockito.given(DriverManager.getConnection("jdbc:sqlite" + dbName)).willReturn(testConnection);
+        when(DriverManager.getConnection("jdbc:sqlite" + dbName)).thenReturn(testConnection);
 
         testDB.connect();
-
         verify(testConnection, times(1)).isClosed();
     }
 
