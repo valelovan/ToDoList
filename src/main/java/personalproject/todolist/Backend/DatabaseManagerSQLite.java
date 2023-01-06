@@ -38,6 +38,11 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
         // Private constructor for singleton design pattern
     }
 
+    private boolean isConnected() {
+        try {
+            return null != connection && !connection.isClosed();
+        } catch (SQLException s) {throw new RuntimeException(s);}
+    }
 
     @Override
     public void close() {
@@ -46,7 +51,11 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void connect() {
-
+        if (isConnected()) throw new IllegalStateException("Connection already in progress.");
+        try {
+            Class.forName("org.sqlite.JDBC");
+            connection = DriverManager.getConnection("jdbc:sqlite:" + DATABASE_NAME);
+        } catch (Exception e) {throw new RuntimeException(e);}
     }
 
     @Override

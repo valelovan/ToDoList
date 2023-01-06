@@ -45,12 +45,12 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testConnectNotConnected() throws SQLException {
         when(testConnection.isClosed()).thenReturn(false);
-        mockStatic(DriverManager.class);
-        //BDDMockito.given(DriverManager.getConnection("jdbc:sqlite" + dbName)).willReturn(testConnection);
-        when(DriverManager.getConnection("jdbc:sqlite" + dbName)).thenReturn(testConnection);
+        testDB.connection = null;
 
         testDB.connect();
-        verify(testConnection, times(1)).isClosed();
+        assertNotNull(testDB.connection);
+
+        verify(testConnection, atMost(1)).isClosed();
     }
 
     @Test
