@@ -32,7 +32,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     /**
      * Database connection.
      */
-    private Connection connection;
+    protected Connection connection;
 
     private DatabaseManagerSQLite() {
         // Private constructor for singleton design pattern
