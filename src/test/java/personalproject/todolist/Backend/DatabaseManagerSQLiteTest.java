@@ -147,6 +147,7 @@ public class DatabaseManagerSQLiteTest {
     // MISC TEST HELPER METHDOS
 
     private void setTablesExist() throws SQLException {
+        when(testConnection.getMetaData()).thenReturn(testMetaData);
         when(testMetaData.getTables(null, null, "Todo", null))
                 .thenReturn(testResultSet);
         when(testMetaData.getTables(null, null, "Group", null))
@@ -155,6 +156,7 @@ public class DatabaseManagerSQLiteTest {
     }
 
     private void setTablesDoNotExist() throws SQLException {
+        when(testConnection.getMetaData()).thenReturn(testMetaData);
         when(testMetaData.getTables(null, null, "Todo", null))
                 .thenReturn(testResultSet);
         when(testMetaData.getTables(null, null, "Group", null))

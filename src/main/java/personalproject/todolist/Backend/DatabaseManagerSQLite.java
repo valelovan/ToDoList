@@ -44,6 +44,25 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
         } catch (SQLException s) {throw new RuntimeException(s);}
     }
 
+    private boolean tableExists(String tableName) {
+        ResultSet result = null;
+        boolean exists = false;
+        try {
+            DatabaseMetaData dbMeta = connection.getMetaData();
+            result = dbMeta.getTables(null, null, tableName, null);
+            exists = result.next();
+        } catch (Exception e) {/* NOTHING */}
+        finally {
+            try {result.close();} catch (Exception e) {/* NOTHING */}
+        }
+        System.out.println(exists); //
+        return exists;
+    }
+
+    private boolean tablesExist() {
+        return tableExists("Todo") && tableExists("Group");
+    }
+
     @Override
     public void close() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
@@ -66,6 +85,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     @Override
     public void createTables() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (tablesExist()) throw new IllegalStateException("Tables already exist.");
     }
 
     @Override
