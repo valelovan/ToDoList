@@ -8,8 +8,6 @@ public class ToDo {
     private String group;
     private String title;
     private String description;
-    private Date dateCreated;
-    private Date dateDue;
     private boolean isComplete;
 
     /**
@@ -70,38 +68,6 @@ public class ToDo {
         if (null == description)
             throw new IllegalArgumentException("Null description is not accepted.");
         this.description = description;
-    }
-
-    /**
-     * DateCreated field getter.
-     * @return ToDo's DataCreated
-     */
-    public Date getDateCreated() {return dateCreated;}
-
-    /**
-     * DateCreated field setter.
-     * @param dateCreated New DateCreated.
-     */
-    public void setDateCreated(Date dateCreated) {
-        if (null == dateCreated)
-            throw new IllegalArgumentException("Null date created is not accepted.");
-        this.dateCreated = dateCreated;
-    }
-
-    /**
-     * DateDue field getter.
-     * @return ToDo's DateCreated.
-     */
-    public Date getDateDue() {return dateDue;}
-
-    /**
-     * DateDue field setter.
-     * @param dateDue New DateDue.
-     */
-    public void setDateDue(Date dateDue) {
-        if (null == dateDue)
-            throw new IllegalArgumentException("Null date due is not accepted.");
-        this.dateDue = dateDue;
     }
 
     /**
