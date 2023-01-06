@@ -1,12 +1,27 @@
-package personalproject.todolist;
+package personalproject.todolist.Backend;
 
+import org.junit.jupiter.api.BeforeAll;
+import personalproject.todolist.Backend.DatabaseManagerSQLite;
+
+import java.sql.Connection;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
 public class DatabaseManagerSQLiteTest {
 
+    private Connection testConnection;
+    private DatabaseManagerSQLite testDB;
+
+    @BeforeAll
+    public void initSetup() {
+        testConnection = mock(Connection.class);
+        testDB = DatabaseManagerSQLite.getInstance();
+        testDB.connection = testConnection;
+    }
+
     // TESTS: public void close();
+
 
     // TESTS: public void connect();
 
