@@ -43,14 +43,24 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void connect();
     @Test
-    public void testConnectNotConnected() throws SQLException {
-        when(testConnection.isClosed()).thenReturn(false);
+    public void testConnectNotConnectedNull() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
         testDB.connection = null;
 
         testDB.connect();
         assertNotNull(testDB.connection);
 
         verify(testConnection, atMost(1)).isClosed();
+    }
+
+    @Test
+    public void testConnectNotConnectedNotNull() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        testDB.connect();
+        assertNotNull(testDB.connection);
+
+        verify(testConnection, times(1)).isClosed();
     }
 
     @Test
