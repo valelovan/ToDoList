@@ -86,6 +86,10 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     public void createTables() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         if (tablesExist()) throw new IllegalStateException("Tables already exist.");
+        String creationStatement = """
+                CREATE TABLE Todo (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "Group" VarChar(255) NOT NULL,
+                	Title VarChar(255) NOT NULL, Description VarChar(4096) NOT NULL,  IsComplete BOOLEAN NOT NULL);""";
+
     }
 
     @Override
