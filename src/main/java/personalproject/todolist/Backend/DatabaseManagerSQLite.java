@@ -60,7 +60,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     private boolean tablesExist() {
-        return tableExists("Todo") && tableExists("Group");
+        return tableExists("Todos") && tableExists("Groups");
     }
 
     @Override
@@ -86,9 +86,13 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     public void createTables() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         if (tablesExist()) throw new IllegalStateException("Tables already exist.");
-        String creationStatement = """
-                CREATE TABLE Todo (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, "Group" VarChar(255) NOT NULL,
-                	Title VarChar(255) NOT NULL, Description VarChar(4096) NOT NULL,  IsComplete BOOLEAN NOT NULL);""";
+        String todoCreateSQL = """
+                CREATE TABLE Todos (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, GroupID Int(31) NOT NULL,
+                    Title VarChar(255) NOT NULL, Description VarChar(4095) NOT NULL,  IsComplete BOOLEAN NOT NULL,
+                	CONSTRAINT "GroupID_fk" FOREIGN KEY(GroupID) REFERENCES "Groups" (ID) ON DELETE CASCADE);""";
+        String groupCreateSQL = """
+                CREATE TABLE "Groups" (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+                    Name VarChar(255) NOT NULL UNIQUE, Description VarChar(4095) NOT NULL);""";
 
     }
 

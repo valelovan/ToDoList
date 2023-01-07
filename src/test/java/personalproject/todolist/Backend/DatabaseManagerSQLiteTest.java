@@ -154,27 +154,27 @@ public class DatabaseManagerSQLiteTest {
 
     private void setTablesExist() throws SQLException {
         when(testConnection.getMetaData()).thenReturn(testMetaData);
-        when(testMetaData.getTables(null, null, "Todo", null))
+        when(testMetaData.getTables(null, null, "Todos", null))
                 .thenReturn(testResultSet);
-        when(testMetaData.getTables(null, null, "Group", null))
+        when(testMetaData.getTables(null, null, "Groups", null))
                 .thenReturn(testResultSet);
         when(testResultSet.next()).thenReturn(true);
     }
 
     private void setTablesDoNotExist() throws SQLException {
         when(testConnection.getMetaData()).thenReturn(testMetaData);
-        when(testMetaData.getTables(null, null, "Todo", null))
+        when(testMetaData.getTables(null, null, "Todos", null))
                 .thenReturn(testResultSet);
-        when(testMetaData.getTables(null, null, "Group", null))
+        when(testMetaData.getTables(null, null, "Groups", null))
                 .thenReturn(testResultSet);
         when(testResultSet.next()).thenReturn(false);
     }
 
     private void verifyTablesExist() throws SQLException {
         verify(testMetaData, times(1))
-                .getTables(null, null, "Todo", null);
+                .getTables(null, null, "Todos", null);
         verify(testMetaData, times(1))
-                .getTables(null, null, "Group", null);
+                .getTables(null, null, "Groups", null);
         verify(testResultSet, times(2)).next();
     }
 }
