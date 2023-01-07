@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ToDo {
     private int id;
-    private String group;
+    private Group group;
     private String title;
     private String description;
     private boolean isComplete;
@@ -26,15 +26,17 @@ public class ToDo {
      * Group field getter.
      * @return ToDo's Group.
      */
-    public String getGroup() {return group;}
+    public Group getGroup() {return group;}
 
     /**
      * Group field setter.
      * @param group New Group.
      */
-    public void setGroup(String group) {
+    public void setGroup(Group group) {
         if (null == group)
             throw new IllegalArgumentException("Null group is not accepted.");
+        if (null == group.getName() || null == group.getDescription())
+            throw new IllegalArgumentException("Null name or description not accepted.");
         this.group = group;
     }
 
