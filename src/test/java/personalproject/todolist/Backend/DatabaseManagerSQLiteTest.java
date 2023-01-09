@@ -304,7 +304,7 @@ public class DatabaseManagerSQLiteTest {
         when(testConnection.createStatement()).thenReturn(testStatement);
         when(testStatement.execute(deleteSQL)).thenReturn(false);
 
-        testDB.insertGroup(tempGroup);
+        testDB.deleteGroup(tempGroup);
 
         verify(testStatement, times(1)).execute(deleteSQL);
         verify(testConnection, never()).rollback();

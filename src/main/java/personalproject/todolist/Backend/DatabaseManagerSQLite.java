@@ -146,7 +146,15 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void deleteGroup(Group group) {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        if (null == group) throw new IllegalArgumentException("Null groups not accepted.");
+        String deleteSQL = """
+                DELETE FROM \"Groups\" WHERE ID = %d""";
+        try (Statement statement = connection.createStatement()) {
+            deleteSQL = String.format(deleteSQL, group.getId());
+            statement.execute(deleteSQL);
+        } catch (Exception e ) {throw new RuntimeException(e);}
     }
 
     @Override
