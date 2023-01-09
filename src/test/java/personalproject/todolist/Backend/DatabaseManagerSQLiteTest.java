@@ -199,7 +199,7 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testDeleteTablesTables() throws SQLException {
         String todoSQL = """
-                Drop TABLE Todos""";
+                DROP TABLE Todos""";
         String groupSQL = """
                 DROP TABLE \"Groups\"""";
         setTablesExist();
