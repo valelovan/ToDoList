@@ -55,12 +55,11 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
         finally {
             try {result.close();} catch (Exception e) {/* NOTHING */}
         }
-        System.out.println(exists); //
         return exists;
     }
 
     private boolean tablesExist() {
-        return tableExists("Todos") && tableExists("Groups");
+        return tableExists("Todos") || tableExists("Groups");
     }
 
     @Override
@@ -94,6 +93,11 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
                 CREATE TABLE "Groups" (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
                     Name VarChar(255) NOT NULL UNIQUE, Description VarChar(4095) NOT NULL);""";
 
+        try (Statement statement = connection.createStatement()) {
+            statement.addBatch(todoCreateSQL);
+            statement.addBatch(groupCreateSQL);
+            statement.executeBatch();
+        } catch (Exception e) {throw new RuntimeException(e);}
     }
 
     @Override
