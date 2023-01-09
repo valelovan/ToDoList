@@ -345,6 +345,7 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public List<ToDo> selectAllIncompleteToDos();
 
+
     // MISC TEST HELPER METHDOS
 
     private void setTablesExist() throws SQLException {
