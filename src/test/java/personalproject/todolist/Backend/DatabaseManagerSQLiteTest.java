@@ -271,6 +271,56 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void deleteGroup(String groupName);
 
+    @Test
+    public void testDeleteGroupNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+        Group tempGroup = new Group("School", "School work due.");
+        tempGroup.setId(1234);
+
+        assertThrows(IllegalStateException.class, () -> testDB.deleteGroup(tempGroup));
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testDeleteGroupNoTables() throws SQLException {
+        setTablesDoNotExist();
+        Group tempGroup = new Group("School", "School work due.");
+        tempGroup.setId(1234);
+
+        assertThrows(IllegalStateException.class, () -> testDB.deleteGroup(tempGroup));
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testDeleteGroupTablesExist() throws SQLException {
+        String deleteSQL = """
+                DELETE FROM \"Groups\" WHERE ID = 1234""";
+        Group tempGroup = new Group("School", "School work due.");
+        tempGroup.setId(1234);
+        setTablesExist();
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+        when(testStatement.execute(deleteSQL)).thenReturn(false);
+
+        testDB.insertGroup(tempGroup);
+
+        verify(testStatement, times(1)).execute(deleteSQL);
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testDeleteGroupTablesExistNullGroup() throws SQLException {
+        setTablesExist();
+        Group tempGroup = null;
+
+        assertThrows(IllegalArgumentException.class, () -> testDB.deleteGroup(tempGroup));
+
+        verifyTablesExist();
+    }
 
     // TESTS: public List<String> selectAllGroups();
 
