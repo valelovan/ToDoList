@@ -133,7 +133,14 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void insertGroup(Group group) {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        String insertSQL = """
+                INSERT INTO \"Groups\" (Name, Description) VALUES ('%s', '%s')""";
+        try (Statement statement = connection.createStatement()) {
+            insertSQL = String.format(insertSQL, group.getName(), group.getDescription());
+            statement.execute(insertSQL);
+        } catch (Exception e ) {throw new RuntimeException(e);}
     }
 
     @Override
