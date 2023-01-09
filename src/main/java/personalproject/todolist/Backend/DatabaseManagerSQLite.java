@@ -117,7 +117,17 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void deleteTables() {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        String todoSQL = """
+                DROP TABLE Todos""";
+        String groupSQL = """
+                DROP TABLE \"Groups\"""";
+        try (Statement statement = connection.createStatement()) {
+            statement.addBatch(todoSQL);
+            statement.addBatch(groupSQL);
+            statement.executeBatch();
+        } catch (Exception e ) {throw new RuntimeException(e);}
     }
 
     @Override
