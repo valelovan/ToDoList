@@ -327,6 +327,78 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public Group selectGroup(int id);
 
+    @Test
+    public void testSelectGroupNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> testDB.selectGroup(1234));
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testSelectGroupNoTables() throws SQLException {
+        setTablesDoNotExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.selectGroup(1234));
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testSelectGroupTablesExistGroupExists() throws SQLException {
+        String selectSQL = """
+                SELECT * FROM \"Groups\" WHERE ID = 1234""";
+        setTablesExist();
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+        when(testStatement.executeQuery(selectSQL)).thenReturn(testResultSet);
+        when(testResultSet.next()).thenReturn(true).thenReturn(false);
+        when(testResultSet.getInt("ID")).thenReturn(1234);
+        when(testResultSet.getString("Name")).thenReturn("School");
+        when(testResultSet.getString("Description")).thenReturn("School work due.");
+
+        Group tempGroup = testDB.selectGroup(1234);
+        assertNotNull(tempGroup);
+        assertEquals(1234, tempGroup.getId());
+        assertEquals("School", tempGroup.getName());
+        assertEquals("School work due.", tempGroup.getDescription());
+
+        verify(testStatement, times(1)).execute(selectSQL);
+        verify(testResultSet, times(2)).next();
+        verify(testResultSet, times(1)).getInt("ID");
+        verify(testResultSet, times(1)).getString("Name");
+        verify(testResultSet, times(1)).getString("Description");
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testSelectGroupTablesExistGroupDoesNotExist() throws SQLException {
+        String selectSQL = """
+                SELECT * FROM \"Groups\" WHERE ID = 1234""";
+        setTablesExist();
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+        when(testStatement.executeQuery(selectSQL)).thenReturn(testResultSet);
+        when(testResultSet.next()).thenReturn(false);
+        when(testResultSet.getInt("ID")).thenReturn(1234);
+        when(testResultSet.getString("Name")).thenReturn("School");
+        when(testResultSet.getString("Description")).thenReturn("School work due.");
+
+        assertThrows(IllegalArgumentException.class, () -> testDB.selectGroup(1234));
+
+
+        verify(testStatement, times(1)).execute(selectSQL);
+        verify(testResultSet, times(1)).next();
+        verify(testResultSet, never()).getInt("ID");
+        verify(testResultSet, never()).getString("Name");
+        verify(testResultSet, never()).getString("Description");
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
 
     // TESTS: public void insertToDo(ToDo todo);
 
