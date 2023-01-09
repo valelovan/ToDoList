@@ -29,13 +29,13 @@ public interface DatabaseManagerInterface {
 
     /**
      * Adds a new group to the ToDo group table.
-     * @param groupName Name of the new ToDo group.
+     * @param group Name of the new ToDo group.
      */
     public void insertGroup(Group group);
 
     /**
      * Removes a group from the ToDo group table.
-     * @param groupName Name of the ToDo group.
+     * @param group Name of the ToDo group.
      */
     public void deleteGroup(Group group);
 
@@ -47,7 +47,7 @@ public interface DatabaseManagerInterface {
 
     /**
      * Check if there is a group with the given title in the database.
-     * @param groupName Title of the ToDo group.
+     * @param group Title of the ToDo group.
      * @return True if there is a group with the given title, false otherwise.
      */
     public boolean groupExists(Group group);
