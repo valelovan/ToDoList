@@ -259,6 +259,16 @@ public class DatabaseManagerSQLiteTest {
         verifyTablesExist();
     }
 
+    @Test
+    public void testInsertGroupTablesExistNullGroup() throws SQLException {
+        setTablesExist();
+        Group tempGroup = null;
+
+        assertThrows(IllegalArgumentException.class, () -> testDB.insertGroup(tempGroup));
+
+        verifyTablesExist();
+    }
+
     // TESTS: public void deleteGroup(String groupName);
 
 
