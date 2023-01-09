@@ -219,7 +219,7 @@ public class DatabaseManagerSQLiteTest {
         verifyTablesExist();
     }
 
-    // TESTS: public void insertGroup(String groupName);
+    // TESTS: public void insertGroup(Group group);
 
     @Test
     public void testInsertGroupNotConnected() throws SQLException {
@@ -269,7 +269,7 @@ public class DatabaseManagerSQLiteTest {
         verifyTablesExist();
     }
 
-    // TESTS: public void deleteGroup(String groupName);
+    // TESTS: public void deleteGroup(Group group);
 
     @Test
     public void testDeleteGroupNotConnected() throws SQLException {
@@ -322,10 +322,10 @@ public class DatabaseManagerSQLiteTest {
         verifyTablesExist();
     }
 
-    // TESTS: public List<String> selectAllGroups();
+    // TESTS: public List<Group> selectAllGroups();
 
 
-    // TESTS: public boolean groupExists(String groupName);
+    // TESTS: public Group selectGroup(int id);
 
 
     // TESTS: public void insertToDo(ToDo todo);
