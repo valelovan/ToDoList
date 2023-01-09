@@ -135,6 +135,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     public void insertGroup(Group group) {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        if (null == group) throw new IllegalArgumentException("Null groups not accepted.");
         String insertSQL = """
                 INSERT INTO \"Groups\" (Name, Description) VALUES ('%s', '%s')""";
         try (Statement statement = connection.createStatement()) {
