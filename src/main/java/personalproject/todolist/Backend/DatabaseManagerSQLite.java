@@ -107,7 +107,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
         String todoSQL = """
                 DELETE FROM Todos""";
         String groupSQL = """
-                Delete From \"Groups\"""";
+                Delete FROM \"Groups\"""";
         try (Statement statement = connection.createStatement()) {
             statement.addBatch(todoSQL);
             statement.addBatch(groupSQL);

@@ -160,7 +160,7 @@ public class DatabaseManagerSQLiteTest {
         String todoSQL = """
                 DELETE FROM Todos""";
         String groupSQL = """
-                Delete From \"Groups\"""";
+                Delete FROM \"Groups\"""";
         setTablesExist();
         when(testStatement.executeBatch()).thenReturn(new int[] {1,1});
 
@@ -178,6 +178,44 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void deleteTables();
 
+    @Test
+    public void testDeleteTablesNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> testDB.deleteTables());
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testDeleteTablesNoTables() throws SQLException {
+        setTablesDoNotExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.deleteTables());
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testDeleteTablesTables() throws SQLException {
+        String todoSQL = """
+                Drop TABLE Todos""";
+        String groupSQL = """
+                DROP TABLE \"Groups\"""";
+        setTablesExist();
+        when(testStatement.executeBatch()).thenReturn(new int[] {1,1});
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        testDB.deleteTables();
+
+        verify(testStatement, times(1)).addBatch(todoSQL);
+        verify(testStatement, times(1)).addBatch(groupSQL);
+        verify(testStatement, times(1)).executeBatch();
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
 
     // TESTS: public void insertGroup(String groupName);
 
