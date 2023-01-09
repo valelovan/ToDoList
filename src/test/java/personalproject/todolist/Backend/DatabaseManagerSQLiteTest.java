@@ -4,6 +4,8 @@ import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import personalproject.todolist.Backend.DatabaseManagerSQLite;
+import personalproject.todolist.Group;
+
 import static org.junit.Assert.*;
 
 import java.sql.*;
@@ -219,6 +221,42 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void insertGroup(String groupName);
 
+    @Test
+    public void testInsertGroupNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+        Group group = new Group();
+
+        assertThrows(IllegalStateException.class, () -> testDB.insertGroup());
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testInsertGroupNoTables() throws SQLException {
+        setTablesDoNotExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.insertGroup("School"));
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testInsertGroupTablesExist() throws SQLException {
+        String insertSQL = """
+                DROP TABLE Todos""";
+        setTablesExist();
+        when(testStatement.executeBatch()).thenReturn(new int[] {1,1});
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        testDB.deleteTables();
+
+        verify(testStatement, times(1)).addBatch(todoSQL);
+        verify(testStatement, times(1)).executeBatch();
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
 
     // TESTS: public void deleteGroup(String groupName);
 

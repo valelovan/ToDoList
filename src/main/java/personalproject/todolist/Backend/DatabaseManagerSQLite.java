@@ -1,5 +1,6 @@
 package personalproject.todolist.Backend;
 
+import personalproject.todolist.Group;
 import personalproject.todolist.ToDo;
 
 import java.sql.*;
@@ -131,22 +132,22 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     @Override
-    public void insertGroup(String groupName) {
+    public void insertGroup(Group group) {
 
     }
 
     @Override
-    public void deleteGroup(String groupName) {
+    public void deleteGroup(Group group) {
 
     }
 
     @Override
-    public List<String> selectAllGroups() {
+    public List<Group> selectAllGroups() {
         return null;
     }
 
     @Override
-    public boolean groupExists(String groupName) {
+    public boolean groupExists(Group group) {
         return false;
     }
 

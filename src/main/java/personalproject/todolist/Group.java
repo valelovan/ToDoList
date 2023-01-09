@@ -5,6 +5,11 @@ public class Group {
     private String name;
     private String description;
 
+    public Group(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     public int getId() {return id;}
 
     public void setId(int id) {this.id = id;}

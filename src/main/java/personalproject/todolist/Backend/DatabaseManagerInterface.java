@@ -1,5 +1,6 @@
 package personalproject.todolist.Backend;
 
+import personalproject.todolist.Group;
 import personalproject.todolist.ToDo;
 
 import java.io.Closeable;
@@ -30,26 +31,26 @@ public interface DatabaseManagerInterface {
      * Adds a new group to the ToDo group table.
      * @param groupName Name of the new ToDo group.
      */
-    public void insertGroup(String groupName);
+    public void insertGroup(Group group);
 
     /**
      * Removes a group from the ToDo group table.
      * @param groupName Name of the ToDo group.
      */
-    public void deleteGroup(String groupName);
+    public void deleteGroup(Group group);
 
     /**
      * Selects all Group titles from the tables.
      * @return List of Group titles.
      */
-    public List<String> selectAllGroups();
+    public List<Group> selectAllGroups();
 
     /**
      * Check if there is a group with the given title in the database.
      * @param groupName Title of the ToDo group.
      * @return True if there is a group with the given title, false otherwise.
      */
-    public boolean groupExists(String groupName);
+    public boolean groupExists(Group group);
 
     /**
      * Inserts a ToDo object into the database.
