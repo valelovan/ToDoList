@@ -108,9 +108,24 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testCreateTablesNoTables() throws SQLException {
+        String todoSQL = """
+                CREATE TABLE Todos (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE, GroupID Int(31) NOT NULL,
+                    Title VarChar(255) NOT NULL, Description VarChar(4095) NOT NULL,  IsComplete BOOLEAN NOT NULL,
+                	CONSTRAINT "GroupID_fk" FOREIGN KEY(GroupID) REFERENCES "Groups" (ID) ON DELETE CASCADE);""";
+        String groupSQL = """
+                CREATE TABLE "Groups" (ID Integer PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+                    Name VarChar(255) NOT NULL UNIQUE, Description VarChar(4095) NOT NULL);""";
         setTablesDoNotExist();
+        when(testStatement.executeBatch()).thenReturn(new int[] {1,1});
 
-        //
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        testDB.createTables();
+
+        verify(testStatement, times(1)).addBatch(todoSQL);
+        verify(testStatement, times(1)).addBatch(groupSQL);
+        verify(testStatement, times(1)).executeBatch();
+        verify(testConnection, never()).rollback();
 
         verifyTablesExist();
     }
