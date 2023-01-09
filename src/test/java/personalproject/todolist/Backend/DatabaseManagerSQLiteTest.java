@@ -32,7 +32,12 @@ public class DatabaseManagerSQLiteTest {
 
     @BeforeEach
     public void beforeEach() {
+        testConnection = mock(Connection.class);
+        testDB = DatabaseManagerSQLite.getInstance();
         testDB.connection = testConnection;
+        testResultSet = mock(ResultSet.class);
+        testMetaData = mock(DatabaseMetaData.class);
+        testStatement = mock(Statement.class);
     }
 
     // TESTS: public void close();
