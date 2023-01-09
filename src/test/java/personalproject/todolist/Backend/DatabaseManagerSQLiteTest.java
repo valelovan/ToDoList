@@ -137,6 +137,44 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void clearTables();
 
+    @Test
+    public void testClearTablesNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> testDB.clearTables());
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testClearTablesNoTables() throws SQLException {
+        setTablesDoNotExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.clearTables());
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testClearTablesTables() throws SQLException {
+        String todoSQL = """
+                DELETE FROM Todos""";
+        String groupSQL = """
+                Delete From \"Groups\"""";
+        setTablesExist();
+        when(testStatement.executeBatch()).thenReturn(new int[] {1,1});
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        testDB.clearTables();
+
+        verify(testStatement, times(1)).addBatch(todoSQL);
+        verify(testStatement, times(1)).addBatch(groupSQL);
+        verify(testStatement, times(1)).executeBatch();
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
 
     // TESTS: public void deleteTables();
 
