@@ -19,6 +19,7 @@ public class DatabaseManagerSQLiteTest {
     private Connection testConnection;
     private DatabaseManagerSQLite testDB;
     private ResultSet testResultSet;
+    private ResultSet testQueryResult;
     private DatabaseMetaData testMetaData;
     private Statement testStatement;
 
@@ -28,6 +29,7 @@ public class DatabaseManagerSQLiteTest {
         testDB = DatabaseManagerSQLite.getInstance();
         testDB.connection = testConnection;
         testResultSet = mock(ResultSet.class);
+        testQueryResult = mock(ResultSet.class);
         testMetaData = mock(DatabaseMetaData.class);
         testStatement = mock(Statement.class);
     }
@@ -38,6 +40,7 @@ public class DatabaseManagerSQLiteTest {
         testDB = DatabaseManagerSQLite.getInstance();
         testDB.connection = testConnection;
         testResultSet = mock(ResultSet.class);
+        testQueryResult = mock(ResultSet.class);
         testMetaData = mock(DatabaseMetaData.class);
         testStatement = mock(Statement.class);
     }
@@ -224,7 +227,7 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testInsertGroupNotConnected() throws SQLException {
         when(testConnection.isClosed()).thenReturn(true);
-        Group tempGroup = new Group("School", "School work due.");
+        Group tempGroup = new Group(1234,"School", "School work due.");
 
         assertThrows(IllegalStateException.class, () -> testDB.insertGroup(tempGroup));
 
@@ -234,7 +237,7 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testInsertGroupNoTables() throws SQLException {
         setTablesDoNotExist();
-        Group tempGroup = new Group("School", "School work due.");
+        Group tempGroup = new Group(1234,"School", "School work due.");
 
         assertThrows(IllegalStateException.class, () -> testDB.insertGroup(tempGroup));
 
@@ -245,7 +248,7 @@ public class DatabaseManagerSQLiteTest {
     public void testInsertGroupTablesExist() throws SQLException {
         String insertSQL = """
                 INSERT INTO \"Groups\" (Name, Description) VALUES ('School', 'School work due.')""";
-        Group tempGroup = new Group("School", "School work due.");
+        Group tempGroup = new Group(1234,"School", "School work due.");
         setTablesExist();
 
         when(testConnection.createStatement()).thenReturn(testStatement);
@@ -274,8 +277,7 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testDeleteGroupNotConnected() throws SQLException {
         when(testConnection.isClosed()).thenReturn(true);
-        Group tempGroup = new Group("School", "School work due.");
-        tempGroup.setId(1234);
+        Group tempGroup = new Group(1234,"School", "School work due.");
 
         assertThrows(IllegalStateException.class, () -> testDB.deleteGroup(tempGroup));
 
@@ -285,8 +287,7 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testDeleteGroupNoTables() throws SQLException {
         setTablesDoNotExist();
-        Group tempGroup = new Group("School", "School work due.");
-        tempGroup.setId(1234);
+        Group tempGroup = new Group(1234, "School", "School work due.");
 
         assertThrows(IllegalStateException.class, () -> testDB.deleteGroup(tempGroup));
 
@@ -297,8 +298,7 @@ public class DatabaseManagerSQLiteTest {
     public void testDeleteGroupTablesExist() throws SQLException {
         String deleteSQL = """
                 DELETE FROM \"Groups\" WHERE ID = 1234""";
-        Group tempGroup = new Group("School", "School work due.");
-        tempGroup.setId(1234);
+        Group tempGroup = new Group(1234, "School", "School work due.");
         setTablesExist();
 
         when(testConnection.createStatement()).thenReturn(testStatement);
@@ -352,11 +352,11 @@ public class DatabaseManagerSQLiteTest {
         setTablesExist();
 
         when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testResultSet);
-        when(testResultSet.next()).thenReturn(true).thenReturn(false);
-        when(testResultSet.getInt("ID")).thenReturn(1234);
-        when(testResultSet.getString("Name")).thenReturn("School");
-        when(testResultSet.getString("Description")).thenReturn("School work due.");
+        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
+        when(testQueryResult.next()).thenReturn(true);
+        when(testQueryResult.getInt("ID")).thenReturn(1234);
+        when(testQueryResult.getString("Name")).thenReturn("School");
+        when(testQueryResult.getString("Description")).thenReturn("School work due.");
 
         Group tempGroup = testDB.selectGroup(1234);
         assertNotNull(tempGroup);
@@ -364,11 +364,11 @@ public class DatabaseManagerSQLiteTest {
         assertEquals("School", tempGroup.getName());
         assertEquals("School work due.", tempGroup.getDescription());
 
-        verify(testStatement, times(1)).execute(selectSQL);
-        verify(testResultSet, times(2)).next();
-        verify(testResultSet, times(1)).getInt("ID");
-        verify(testResultSet, times(1)).getString("Name");
-        verify(testResultSet, times(1)).getString("Description");
+        verify(testStatement, times(1)).executeQuery(selectSQL);
+        verify(testQueryResult, times(1)).next();
+        verify(testQueryResult, times(1)).getInt("ID");
+        verify(testQueryResult, times(1)).getString("Name");
+        verify(testQueryResult, times(1)).getString("Description");
         verify(testConnection, never()).rollback();
 
         verifyTablesExist();
@@ -381,20 +381,16 @@ public class DatabaseManagerSQLiteTest {
         setTablesExist();
 
         when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testResultSet);
-        when(testResultSet.next()).thenReturn(false);
-        when(testResultSet.getInt("ID")).thenReturn(1234);
-        when(testResultSet.getString("Name")).thenReturn("School");
-        when(testResultSet.getString("Description")).thenReturn("School work due.");
+        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
+        when(testQueryResult.next()).thenReturn(false);
 
         assertThrows(IllegalArgumentException.class, () -> testDB.selectGroup(1234));
 
-
-        verify(testStatement, times(1)).execute(selectSQL);
-        verify(testResultSet, times(1)).next();
-        verify(testResultSet, never()).getInt("ID");
-        verify(testResultSet, never()).getString("Name");
-        verify(testResultSet, never()).getString("Description");
+        verify(testStatement, times(1)).executeQuery(selectSQL);
+        verify(testQueryResult, times(1)).next();
+        verify(testQueryResult, never()).getInt("ID");
+        verify(testQueryResult, never()).getString("Name");
+        verify(testQueryResult, never()).getString("Description");
         verify(testConnection, never()).rollback();
 
         verifyTablesExist();
