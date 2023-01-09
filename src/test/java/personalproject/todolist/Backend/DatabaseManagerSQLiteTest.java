@@ -224,9 +224,9 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testInsertGroupNotConnected() throws SQLException {
         when(testConnection.isClosed()).thenReturn(true);
-        Group group = new Group();
+        Group tempGroup = new Group("School", "School work due.");
 
-        assertThrows(IllegalStateException.class, () -> testDB.insertGroup());
+        assertThrows(IllegalStateException.class, () -> testDB.insertGroup(tempGroup));
 
         verify(testConnection, times(1)).isClosed();
     }
@@ -234,8 +234,9 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testInsertGroupNoTables() throws SQLException {
         setTablesDoNotExist();
+        Group tempGroup = new Group("School", "School work due.");
 
-        assertThrows(IllegalStateException.class, () -> testDB.insertGroup("School"));
+        assertThrows(IllegalStateException.class, () -> testDB.insertGroup(tempGroup));
 
         verifyTablesExist();
     }
@@ -243,16 +244,16 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testInsertGroupTablesExist() throws SQLException {
         String insertSQL = """
-                DROP TABLE Todos""";
+                INSERT INTO \"Groups\" (Name, Description) VALUES ('School', 'School work due.')""";
+        Group tempGroup = new Group("School", "School work due.");
         setTablesExist();
-        when(testStatement.executeBatch()).thenReturn(new int[] {1,1});
 
         when(testConnection.createStatement()).thenReturn(testStatement);
+        when(testStatement.execute(insertSQL)).thenReturn(false);
 
-        testDB.deleteTables();
+        testDB.insertGroup(tempGroup);
 
-        verify(testStatement, times(1)).addBatch(todoSQL);
-        verify(testStatement, times(1)).executeBatch();
+        verify(testStatement, times(1)).execute(insertSQL);
         verify(testConnection, never()).rollback();
 
         verifyTablesExist();
