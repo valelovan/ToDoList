@@ -163,8 +163,8 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     @Override
-    public boolean groupExists(Group group) {
-        return false;
+    public Group selectGroup(int id) {
+        return null;
     }
 
     @Override
