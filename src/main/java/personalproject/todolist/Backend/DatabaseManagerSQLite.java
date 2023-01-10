@@ -132,122 +132,18 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     @Override
-    public void insertGroup(Group group) {
-        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        if (null == group) throw new IllegalArgumentException("Null groups not accepted.");
-        String insertSQL = """
-                INSERT INTO \"Groups\" (Name, Description) VALUES ('%s', '%s')""";
-        try (Statement statement = connection.createStatement()) {
-            insertSQL = String.format(insertSQL, group.getName(), group.getDescription());
-            statement.execute(insertSQL);
-        } catch (Exception e ) {throw new RuntimeException(e);}
+    public void executeSQL(String sql) {
+
     }
 
     @Override
-    public void deleteGroup(Group group) {
-        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        if (null == group) throw new IllegalArgumentException("Null groups not accepted.");
-        String deleteSQL = """
-                DELETE FROM \"Groups\" WHERE ID = %d""";
-        try (Statement statement = connection.createStatement()) {
-            deleteSQL = String.format(deleteSQL, group.getId());
-            statement.execute(deleteSQL);
-        } catch (Exception e ) {throw new RuntimeException(e);}
-    }
-
-    @Override
-    public List<Group> selectAllGroups() {
-        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        String selectAllSQL = """
-                SELECT * FROM \"Groups\"""";
-        List<Group> tempGroups = new ArrayList<Group>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet result = statement.executeQuery(selectAllSQL);
-            while (result.next()) {
-                tempGroups.add(new Group(result.getInt("ID"),
-                        result.getString("Name"), result.getString("Description")));
-            }
-        } catch (Exception e) {throw new RuntimeException(e);}
-        return tempGroups;
-    }
-
-    @Override
-    public Group selectGroup(int id) {
-        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE ID = %d""";
-        try (Statement statement = connection.createStatement()) {
-            selectSQL = String.format(selectSQL, id);
-            ResultSet result = statement.executeQuery(selectSQL);
-            if (null != result && result.next())
-                return new Group(result.getInt("ID"), result.getString("Name"),
-                        result.getString("Description"));
-        } catch (Exception e ) {throw new RuntimeException(e);}
-        throw new IllegalArgumentException("No group found.");
-    }
-
-    @Override
-    public Group selectGroupByName(String name) {
-        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE Name = '%s'""";
-        try (Statement statement = connection.createStatement()) {
-            selectSQL = String.format(selectSQL, name);
-            ResultSet result = statement.executeQuery(selectSQL);
-            if (null != result && result.next())
-                return new Group(result.getInt("ID"), result.getString("Name"),
-                        result.getString("Description"));
-        } catch (Exception e ) {throw new RuntimeException(e);}
-        throw new IllegalArgumentException("No group found.");
-    }
-
-    @Override
-    public void insertToDo(ToDo todo) {
-        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        validateToDo(todo);
-    }
-
-    @Override
-    public List<ToDo> selectToDos(String todoTitle) {
+    public List<ToDo> executeToDoSQL(String sql) {
         return null;
     }
 
     @Override
-    public void deleteToDo(int id) {
-
-    }
-
-    @Override
-    public List<ToDo> selectAllTodos() {
+    public List<Group> executeGroupSQL(String sql) {
         return null;
     }
 
-    @Override
-    public List<ToDo> selectAllTodos(String groupTitle) {
-        return null;
-    }
-
-    @Override
-    public List<ToDo> selectAllIncompleteToDos() {
-        return null;
-    }
-
-    public void validateGroup(Group group) {
-        if (null == group || null == group.getName() ||
-                null == group.getDescription())
-            throw new IllegalArgumentException("Null Group field.");
-    }
-
-    public void validateToDo(ToDo todo) {
-        if (null == todo || null == todo.getTitle() ||
-                null == todo.getDescription())
-            throw new IllegalArgumentException("Null todo field.");
-        validateGroup(todo.getGroup());
-    }
 }

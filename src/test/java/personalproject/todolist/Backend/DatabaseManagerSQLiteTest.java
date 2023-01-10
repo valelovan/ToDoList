@@ -232,423 +232,87 @@ public class DatabaseManagerSQLiteTest {
         verifyTablesExist();
     }
 
-    // TESTS: public void insertGroup(Group group);
+    // TESTS: public void executeSQL(String sql);
 
     @Test
-    public void testInsertGroupNotConnected() throws SQLException {
+    public void testExecuteSQLNoConnection() throws SQLException {
         when(testConnection.isClosed()).thenReturn(true);
-        Group tempGroup = new Group(1234,"School", "School work due.");
 
-        assertThrows(IllegalStateException.class, () -> testDB.insertGroup(tempGroup));
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        assertThrows(IllegalStateException.class, () -> testDB.executeSQL(sql));
 
         verify(testConnection, times(1)).isClosed();
     }
 
     @Test
-    public void testInsertGroupNoTables() throws SQLException {
-        setTablesDoNotExist();
-        Group tempGroup = new Group(1234,"School", "School work due.");
-
-        assertThrows(IllegalStateException.class, () -> testDB.insertGroup(tempGroup));
-
-        verifyTablesExist();
+    public void testExecuteSQLNoTables() throws SQLException {
+        //
     }
 
     @Test
-    public void testInsertGroupTablesExist() throws SQLException {
-        String insertSQL = """
-                INSERT INTO \"Groups\" (Name, Description) VALUES ('School', 'School work due.')""";
-        Group tempGroup = new Group(1234,"School", "School work due.");
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.execute(insertSQL)).thenReturn(false);
-
-        testDB.insertGroup(tempGroup);
-
-        verify(testStatement, times(1)).execute(insertSQL);
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
+    public void testExecuteSQLValid() throws SQLException {
+        //
     }
 
-    @Test
-    public void testInsertGroupTablesExistNullGroup() throws SQLException {
-        setTablesExist();
-        Group tempGroup = null;
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.insertGroup(tempGroup));
-
-        verifyTablesExist();
-    }
-
-    // TESTS: public void deleteGroup(Group group);
+    // TESTS: public List<ToDo> executeToDoSQL(String sql);
 
     @Test
-    public void testDeleteGroupNotConnected() throws SQLException {
+    public void testExecuteToDoSQLNoConnection() throws SQLException {
         when(testConnection.isClosed()).thenReturn(true);
-        Group tempGroup = new Group(1234,"School", "School work due.");
 
-        assertThrows(IllegalStateException.class, () -> testDB.deleteGroup(tempGroup));
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        assertThrows(IllegalStateException.class, () -> testDB.executeToDoSQL(sql));
 
         verify(testConnection, times(1)).isClosed();
     }
 
     @Test
-    public void testDeleteGroupNoTables() throws SQLException {
-        setTablesDoNotExist();
-        Group tempGroup = new Group(1234, "School", "School work due.");
-
-        assertThrows(IllegalStateException.class, () -> testDB.deleteGroup(tempGroup));
-
-        verifyTablesExist();
+    public void testExecuteToDoNoTables() throws SQLException {
+        //
     }
 
     @Test
-    public void testDeleteGroupTablesExist() throws SQLException {
-        String deleteSQL = """
-                DELETE FROM \"Groups\" WHERE ID = 1234""";
-        Group tempGroup = new Group(1234, "School", "School work due.");
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.execute(deleteSQL)).thenReturn(false);
-
-        testDB.deleteGroup(tempGroup);
-
-        verify(testStatement, times(1)).execute(deleteSQL);
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
+    public void testExecuteToDoValidNoResults() throws SQLException {
+        //
     }
 
     @Test
-    public void testDeleteGroupTablesExistNullGroup() throws SQLException {
-        setTablesExist();
-        Group tempGroup = null;
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.deleteGroup(tempGroup));
-
-        verifyTablesExist();
+    public void testExecuteToDoValidMultipleResults() throws SQLException {
+        //
     }
 
-    // TESTS: public List<Group> selectAllGroups();
+    // TESTS: public List<Group> executeGroupSQL(String sql);
 
     @Test
-    public void testSelectAllGroupsNotConnected() throws SQLException {
+    public void testExecuteGroupSQLNoConnection() throws SQLException {
         when(testConnection.isClosed()).thenReturn(true);
 
-        assertThrows(IllegalStateException.class, () -> testDB.selectAllGroups());
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        assertThrows(IllegalStateException.class, () -> testDB.executeGroupSQL(sql));
 
         verify(testConnection, times(1)).isClosed();
     }
 
     @Test
-    public void testSelectAllGroupsNoTables() throws SQLException {
-        setTablesDoNotExist();
-
-        assertThrows(IllegalStateException.class, () -> testDB.selectAllGroups());
-
-        verifyTablesExist();
+    public void testExecuteGroupNoTables() throws SQLException {
+        //
     }
 
     @Test
-    public void testSelectAllGroupsTablesExistGroups() throws SQLException {
-        String selectAllSQL = """
-                SELECT * FROM \"Groups\"""";
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectAllSQL)).thenReturn(testQueryResult);
-        when(testQueryResult.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        when(testQueryResult.getInt("ID")).thenReturn(1234).thenReturn(4321);
-        when(testQueryResult.getString("Name")).thenReturn("School").thenReturn("Job");
-        when(testQueryResult.getString("Description")).thenReturn("School work due.").thenReturn("Work tasks.");
-
-        List<Group> tempGroups = testDB.selectAllGroups();
-        assertNotNull(tempGroups);
-        // Index 0
-        assertEquals(1234, tempGroups.get(0).getId());
-        assertEquals("School", tempGroups.get(0).getName());
-        assertEquals("School work due.", tempGroups.get(0).getDescription());
-        // Index 1
-        assertEquals(4321, tempGroups.get(1).getId());
-        assertEquals("Job", tempGroups.get(1).getName());
-        assertEquals("Work tasks.", tempGroups.get(1).getDescription());
-
-        verify(testStatement, times(1)).executeQuery(selectAllSQL);
-        verify(testQueryResult, times(3)).next();
-        verify(testQueryResult, times(2)).getInt("ID");
-        verify(testQueryResult, times(2)).getString("Name");
-        verify(testQueryResult, times(2)).getString("Description");
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
+    public void testExecuteGroupValidNoResults() throws SQLException {
+        //
     }
 
     @Test
-    public void testSelectAllGroupsTablesExistNoGroups() throws SQLException {
-        String selectAllSQL = """
-                SELECT * FROM \"Groups\"""";
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectAllSQL)).thenReturn(testQueryResult);
-        when(testQueryResult.next()).thenReturn(false);
-
-        List<Group> tempGroups = testDB.selectAllGroups();
-        assertNotNull(tempGroups);
-        assertTrue(tempGroups.isEmpty());
-
-        verify(testStatement, times(1)).executeQuery(selectAllSQL);
-        verify(testQueryResult, times(1)).next();
-        verify(testQueryResult, never()).getInt("ID");
-        verify(testQueryResult, never()).getString("Name");
-        verify(testQueryResult, never()).getString("Description");
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
+    public void testExecuteGroupValidMultipleResults() throws SQLException {
+        //
     }
-
-    // TESTS: public Group selectGroup(int id);
-
-    @Test
-    public void testSelectGroupNotConnected() throws SQLException {
-        when(testConnection.isClosed()).thenReturn(true);
-
-        assertThrows(IllegalStateException.class, () -> testDB.selectGroup(1234));
-
-        verify(testConnection, times(1)).isClosed();
-    }
-
-    @Test
-    public void testSelectGroupNoTables() throws SQLException {
-        setTablesDoNotExist();
-
-        assertThrows(IllegalStateException.class, () -> testDB.selectGroup(1234));
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testSelectGroupTablesExistGroupExists() throws SQLException {
-        String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE ID = 1234""";
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
-        when(testQueryResult.next()).thenReturn(true);
-        when(testQueryResult.getInt("ID")).thenReturn(1234);
-        when(testQueryResult.getString("Name")).thenReturn("School");
-        when(testQueryResult.getString("Description")).thenReturn("School work due.");
-
-        Group tempGroup = testDB.selectGroup(1234);
-        assertNotNull(tempGroup);
-        assertEquals(1234, tempGroup.getId());
-        assertEquals("School", tempGroup.getName());
-        assertEquals("School work due.", tempGroup.getDescription());
-
-        verify(testStatement, times(1)).executeQuery(selectSQL);
-        verify(testQueryResult, times(1)).next();
-        verify(testQueryResult, times(1)).getInt("ID");
-        verify(testQueryResult, times(1)).getString("Name");
-        verify(testQueryResult, times(1)).getString("Description");
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testSelectGroupTablesExistGroupDoesNotExist() throws SQLException {
-        String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE ID = 1234""";
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
-        when(testQueryResult.next()).thenReturn(false);
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.selectGroup(1234));
-
-        verify(testStatement, times(1)).executeQuery(selectSQL);
-        verify(testQueryResult, times(1)).next();
-        verify(testQueryResult, never()).getInt("ID");
-        verify(testQueryResult, never()).getString("Name");
-        verify(testQueryResult, never()).getString("Description");
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
-    }
-
-    // TESTS: public Group selectGroupByName(String name);
-
-    @Test
-    public void testSelectGroupByNameNotConnected() throws SQLException {
-        when(testConnection.isClosed()).thenReturn(true);
-
-        assertThrows(IllegalStateException.class, () -> testDB.selectGroupByName("School"));
-
-        verify(testConnection, times(1)).isClosed();
-    }
-
-    @Test
-    public void testSelectGroupByNameNoTables() throws SQLException {
-        setTablesDoNotExist();
-
-        assertThrows(IllegalStateException.class, () -> testDB.selectGroupByName("School"));
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testSelectGroupByNameTablesExistGroupExists() throws SQLException {
-        String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE Name = 'School'""";
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
-        when(testQueryResult.next()).thenReturn(true);
-        when(testQueryResult.getInt("ID")).thenReturn(1234);
-        when(testQueryResult.getString("Name")).thenReturn("School");
-        when(testQueryResult.getString("Description")).thenReturn("School work due.");
-
-        Group tempGroup = testDB.selectGroupByName("School");
-        assertNotNull(tempGroup);
-        assertEquals(1234, tempGroup.getId());
-        assertEquals("School", tempGroup.getName());
-        assertEquals("School work due.", tempGroup.getDescription());
-
-        verify(testStatement, times(1)).executeQuery(selectSQL);
-        verify(testQueryResult, times(1)).next();
-        verify(testQueryResult, times(1)).getInt("ID");
-        verify(testQueryResult, times(1)).getString("Name");
-        verify(testQueryResult, times(1)).getString("Description");
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testSelectGroupByNameTablesExistGroupDoesNotExist() throws SQLException {
-        String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE Name = 'School'""";
-        setTablesExist();
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
-        when(testQueryResult.next()).thenReturn(false);
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.selectGroupByName("School"));
-
-        verify(testStatement, times(1)).executeQuery(selectSQL);
-        verify(testQueryResult, times(1)).next();
-        verify(testQueryResult, never()).getInt("ID");
-        verify(testQueryResult, never()).getString("Name");
-        verify(testQueryResult, never()).getString("Description");
-        verify(testConnection, never()).rollback();
-
-        verifyTablesExist();
-    }
-
-    // TESTS: public void insertToDo(ToDo todo);
-
-    @Test
-    public void testInsertToDoNotConnected() throws SQLException {
-        when(testConnection.isClosed()).thenReturn(true);
-
-        assertThrows(IllegalStateException.class, () -> testDB.insertToDo(testToDo));
-
-        verify(testConnection, times(1)).isClosed();
-    }
-
-    @Test
-    public void testInsertToDoNoTables() throws SQLException {
-        setTablesDoNotExist();
-
-        assertThrows(IllegalStateException.class, () -> testDB.insertToDo(testToDo));
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testInsertToDoNullArg() throws SQLException {
-        setTablesExist();
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.insertToDo(null));
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testInsertToDoNullField() throws SQLException {
-        setTablesExist();
-
-        when(testToDo.getId()).thenReturn(1234);
-        when(testToDo.getTitle()).thenReturn("MATH HW");
-        when(testToDo.getIsComplete()).thenReturn(true);
-        // ToDo contains a null field: description. Should throw an exception
-        when(testToDo.getDescription()).thenReturn(null);
-        // ToDo's group
-        when(testToDo.getGroup()).thenReturn(testGroup);
-        when(testGroup.getId()).thenReturn(4321);
-        when(testGroup.getName()).thenReturn("School");
-        when(testGroup.getDescription()).thenReturn("School work due.");
-
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.insertToDo(testToDo));
-
-        // Verify the null field was checked.
-        verify(testToDo, times(1)).getDescription();
-
-        verifyTablesExist();
-    }
-
-    @Test
-    public void testInsertToDoValid() throws SQLException {
-        setTablesExist();
-
-        when(testToDo.getId()).thenReturn(1234);
-        when(testToDo.getTitle()).thenReturn("MATH HW");
-        when(testToDo.getIsComplete()).thenReturn(true);
-        when(testToDo.getDescription()).thenReturn("Textbook problems 1, 2, 2a, and 3.");
-        // ToDo's group
-        when(testToDo.getGroup()).thenReturn(testGroup);
-        when(testGroup.getId()).thenReturn(4321);
-        when(testGroup.getName()).thenReturn("School");
-        when(testGroup.getDescription()).thenReturn("School work due.");
-
-        when(testConnection.createStatement()).thenReturn(testStatement);
-
-        assertThrows(IllegalArgumentException.class, () -> testDB.insertToDo(testToDo));
-
-        verify(testToDo, times(2)).getId();
-        verify(testToDo, times(2)).getTitle();
-        verify(testToDo, times(2)).getIsComplete();
-        verify(testToDo, times(2)).getDescription();
-        verify(testToDo, times(2)).getGroup();
-        verify(testGroup, times(2)).getId();
-        verify(testGroup, times(2)).getName();
-        verify(testGroup, times(2)).getDescription();
-
-        verifyTablesExist();
-    }
-
-    // TESTS: public List<ToDo> selectToDos(String todoTitle);
-
-
-    // TESTS: public void deleteToDo(int id);
-
-
-    // TESTS: public List<ToDo> selectAllTodos();
-
-
-    // TESTS: public List<ToDo> selectAllTodos(String groupTitle);
-
-
-    // TESTS: public List<ToDo> selectAllIncompleteToDos();
-
 
     // MISC TEST HELPER METHDOS
 

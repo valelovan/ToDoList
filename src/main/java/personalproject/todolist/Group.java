@@ -23,4 +23,11 @@ public class Group {
 
     public void setDescription() {this.description = description;}
 
+    public boolean equals(Object o) {
+        if (o.getClass() != this.getClass()) return false;
+        Group other = (Group) o;
+        return this.name.equals(other.getName()) &&
+                this.description.equals(other.getDescription());
+    }
+
 }

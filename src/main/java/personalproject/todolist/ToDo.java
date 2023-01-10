@@ -10,6 +10,14 @@ public class ToDo {
     private String description;
     private boolean isComplete;
 
+    public ToDo(int id, Group group, String title, String description, boolean isComplete) {
+        this.id = id;
+        this.group = group;
+        this.title = title;
+        this.description = description;
+        this.isComplete = isComplete;
+    }
+
     /**
      * ID field getter.
      * @return ToDo's ID.
