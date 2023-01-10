@@ -324,6 +324,81 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public List<Group> selectAllGroups();
 
+    @Test
+    public void testSelectAllGroupsNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> testDB.selectAllGroups());
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testSelectAllGroupsNoTables() throws SQLException {
+        setTablesDoNotExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.selectAllGroups());
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testSelectAllGroupsTablesExistGroups() throws SQLException {
+        String selectAllSQL = """
+                SELECT * FROM \"Groups\"""";
+        setTablesExist();
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+        when(testStatement.executeQuery(selectAllSQL)).thenReturn(testQueryResult);
+        when(testQueryResult.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(testQueryResult.getInt("ID")).thenReturn(1234).thenReturn(4321);
+        when(testQueryResult.getString("Name")).thenReturn("School").thenReturn("Job");
+        when(testQueryResult.getString("Description")).thenReturn("School work due.").thenReturn("Work tasks.");
+
+        List<Group> tempGroups = testDB.selectAllGroups();
+        assertNotNull(tempGroups);
+        // Index 0
+        assertEquals(1234, tempGroups.get(0).getId());
+        assertEquals("School", tempGroups.get(0).getName());
+        assertEquals("School work due.", tempGroups.get(0).getDescription());
+        // Index 1
+        assertEquals(4321, tempGroups.get(1).getId());
+        assertEquals("Job", tempGroups.get(1).getName());
+        assertEquals("Work tasks.", tempGroups.get(1).getDescription());
+
+        verify(testStatement, times(1)).executeQuery(selectAllSQL);
+        verify(testQueryResult, times(1)).next();
+        verify(testQueryResult, times(1)).getInt("ID");
+        verify(testQueryResult, times(1)).getString("Name");
+        verify(testQueryResult, times(1)).getString("Description");
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testSelectAllGroupsTablesExistNoGroups() throws SQLException {
+        String selectSQL = """
+                SELECT * FROM \"Groups\" WHERE ID = 1234""";
+        setTablesExist();
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
+        when(testQueryResult.next()).thenReturn(false);
+
+        List<Group> tempGroups = testDB.selectAllGroups();
+        assertNotNull(tempGroups);
+        assertTrue(tempGroups.isEmpty());
+
+        verify(testStatement, times(1)).executeQuery(selectSQL);
+        verify(testQueryResult, times(1)).next();
+        verify(testQueryResult, never()).getInt("ID");
+        verify(testQueryResult, never()).getString("Name");
+        verify(testQueryResult, never()).getString("Description");
+        verify(testConnection, never()).rollback();
+
+        verifyTablesExist();
+    }
 
     // TESTS: public Group selectGroup(int id);
 
