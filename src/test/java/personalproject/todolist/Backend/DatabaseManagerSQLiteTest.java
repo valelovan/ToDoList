@@ -378,19 +378,19 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testSelectAllGroupsTablesExistNoGroups() throws SQLException {
-        String selectSQL = """
+        String selectAllSQL = """
                 SELECT * FROM \"Groups\"""";
         setTablesExist();
 
         when(testConnection.createStatement()).thenReturn(testStatement);
-        when(testStatement.executeQuery(selectSQL)).thenReturn(testQueryResult);
+        when(testStatement.executeQuery(selectAllSQL)).thenReturn(testQueryResult);
         when(testQueryResult.next()).thenReturn(false);
 
         List<Group> tempGroups = testDB.selectAllGroups();
         assertNotNull(tempGroups);
         assertTrue(tempGroups.isEmpty());
 
-        verify(testStatement, times(1)).executeQuery(selectSQL);
+        verify(testStatement, times(1)).executeQuery(selectAllSQL);
         verify(testQueryResult, times(1)).next();
         verify(testQueryResult, never()).getInt("ID");
         verify(testQueryResult, never()).getString("Name");
