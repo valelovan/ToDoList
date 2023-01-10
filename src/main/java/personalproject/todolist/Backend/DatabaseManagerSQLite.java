@@ -159,6 +159,8 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public List<Group> selectAllGroups() {
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
         return null;
     }
 
