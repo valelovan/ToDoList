@@ -379,7 +379,7 @@ public class DatabaseManagerSQLiteTest {
     @Test
     public void testSelectAllGroupsTablesExistNoGroups() throws SQLException {
         String selectSQL = """
-                SELECT * FROM \"Groups\" WHERE ID = 1234""";
+                SELECT * FROM \"Groups\"""";
         setTablesExist();
 
         when(testConnection.createStatement()).thenReturn(testStatement);
