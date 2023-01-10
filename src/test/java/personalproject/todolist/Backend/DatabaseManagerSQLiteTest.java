@@ -554,6 +554,86 @@ public class DatabaseManagerSQLiteTest {
 
     // TESTS: public void insertToDo(ToDo todo);
 
+    @Test
+    public void testInsertToDoNotConnected() throws SQLException {
+        when(testConnection.isClosed()).thenReturn(true);
+
+        assertThrows(IllegalStateException.class, () -> testDB.insertToDo(testToDo));
+
+        verify(testConnection, times(1)).isClosed();
+    }
+
+    @Test
+    public void testInsertToDoNoTables() throws SQLException {
+        setTablesDoNotExist();
+
+        assertThrows(IllegalStateException.class, () -> testDB.insertToDo(testToDo));
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testInsertToDoNullArg() throws SQLException {
+        setTablesExist();
+
+        assertThrows(IllegalArgumentException.class, () -> testDB.insertToDo(null));
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testInsertToDoNullField() throws SQLException {
+        setTablesExist();
+
+        when(testToDo.getId()).thenReturn(1234);
+        when(testToDo.getTitle()).thenReturn("MATH HW");
+        when(testToDo.getIsComplete()).thenReturn(true);
+        // ToDo contains a null field: description. Should throw an exception
+        when(testToDo.getDescription()).thenReturn(null);
+        // ToDo's group
+        when(testToDo.getGroup()).thenReturn(testGroup);
+        when(testGroup.getId()).thenReturn(4321);
+        when(testGroup.getName()).thenReturn("School");
+        when(testGroup.getDescription()).thenReturn("School work due.");
+
+
+        assertThrows(IllegalArgumentException.class, () -> testDB.insertToDo(testToDo));
+
+        // Verify the null field was checked.
+        verify(testToDo, times(1)).getDescription();
+
+        verifyTablesExist();
+    }
+
+    @Test
+    public void testInsertToDoValid() throws SQLException {
+        setTablesExist();
+
+        when(testToDo.getId()).thenReturn(1234);
+        when(testToDo.getTitle()).thenReturn("MATH HW");
+        when(testToDo.getIsComplete()).thenReturn(true);
+        when(testToDo.getDescription()).thenReturn("Textbook problems 1, 2, 2a, and 3.");
+        // ToDo's group
+        when(testToDo.getGroup()).thenReturn(testGroup);
+        when(testGroup.getId()).thenReturn(4321);
+        when(testGroup.getName()).thenReturn("School");
+        when(testGroup.getDescription()).thenReturn("School work due.");
+
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        assertThrows(IllegalArgumentException.class, () -> testDB.insertToDo(testToDo));
+
+        verify(testToDo, times(2)).getId();
+        verify(testToDo, times(2)).getTitle();
+        verify(testToDo, times(2)).getIsComplete();
+        verify(testToDo, times(2)).getDescription();
+        verify(testToDo, times(2)).getGroup();
+        verify(testGroup, times(2)).getId();
+        verify(testGroup, times(2)).getName();
+        verify(testGroup, times(2)).getDescription();
+
+        verifyTablesExist();
+    }
 
     // TESTS: public List<ToDo> selectToDos(String todoTitle);
 
