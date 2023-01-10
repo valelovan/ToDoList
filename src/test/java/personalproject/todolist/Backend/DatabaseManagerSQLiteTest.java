@@ -3,8 +3,12 @@ package personalproject.todolist.Backend;
 import org.junit.jupiter.api.*;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.powermock.core.classloader.annotations.PrepareEverythingForTest;
 import personalproject.todolist.Backend.DatabaseManagerSQLite;
 import personalproject.todolist.Group;
+import personalproject.todolist.ToDo;
+
+import javax.persistence.SecondaryTable;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +26,8 @@ public class DatabaseManagerSQLiteTest {
     private ResultSet testQueryResult;
     private DatabaseMetaData testMetaData;
     private Statement testStatement;
+    private ToDo testToDo;
+    private Group testGroup;
 
     @BeforeAll
     public void initSetup() {
@@ -32,6 +38,8 @@ public class DatabaseManagerSQLiteTest {
         testQueryResult = mock(ResultSet.class);
         testMetaData = mock(DatabaseMetaData.class);
         testStatement = mock(Statement.class);
+        testToDo = mock(ToDo.class);
+        testGroup = mock(Group.class);
     }
 
     @BeforeEach
@@ -43,6 +51,8 @@ public class DatabaseManagerSQLiteTest {
         testQueryResult = mock(ResultSet.class);
         testMetaData = mock(DatabaseMetaData.class);
         testStatement = mock(Statement.class);
+        testToDo = mock(ToDo.class);
+        testGroup = mock(Group.class);
     }
 
     // TESTS: public void close();

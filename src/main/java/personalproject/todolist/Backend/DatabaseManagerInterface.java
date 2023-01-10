@@ -53,6 +53,13 @@ public interface DatabaseManagerInterface {
     public Group selectGroup(int id);
 
     /**
+     * Returns the Group associated with the given name.
+     * @param name String containing group name.
+     * @return The group object associated with the name.
+     */
+    public Group selectGroupByName(String name);
+
+    /**
      * Inserts a ToDo object into the database.
      * @param todo ToDo to be inserted.
      */

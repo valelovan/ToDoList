@@ -192,6 +192,11 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     }
 
     @Override
+    public Group selectGroupByName(String name) {
+        return null;
+    }
+
+    @Override
     public void insertToDo(ToDo todo) {
 
     }
