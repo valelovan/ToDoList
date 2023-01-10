@@ -208,7 +208,9 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void insertToDo(ToDo todo) {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        validateToDo(todo);
     }
 
     @Override
@@ -234,5 +236,18 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     @Override
     public List<ToDo> selectAllIncompleteToDos() {
         return null;
+    }
+
+    public void validateGroup(Group group) {
+        if (null == group || null == group.getName() ||
+                null == group.getDescription())
+            throw new IllegalArgumentException("Null Group field.");
+    }
+
+    public void validateToDo(ToDo todo) {
+        if (null == todo || null == todo.getTitle() ||
+                null == todo.getDescription())
+            throw new IllegalArgumentException("Null todo field.");
+        validateGroup(todo.getGroup());
     }
 }
