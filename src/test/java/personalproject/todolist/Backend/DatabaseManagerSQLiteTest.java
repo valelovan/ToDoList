@@ -248,7 +248,15 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testExecuteSQLNoTables() throws SQLException {
-        //
+        setTablesDoNotExist();
+        when(testConnection.isClosed()).thenReturn(false);
+
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        assertThrows(IllegalStateException.class, () -> testDB.executeSQL(sql));
+
+        verifyTablesExist();
     }
 
     @Test
@@ -272,7 +280,15 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testExecuteToDoNoTables() throws SQLException {
-        //
+        setTablesDoNotExist();
+        when(testConnection.isClosed()).thenReturn(false);
+
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        assertThrows(IllegalStateException.class, () -> testDB.executeToDoSQL(sql));
+
+        verifyTablesExist();
     }
 
     @Test
@@ -301,7 +317,15 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testExecuteGroupNoTables() throws SQLException {
-        //
+        setTablesDoNotExist();
+        when(testConnection.isClosed()).thenReturn(false);
+
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        assertThrows(IllegalStateException.class, () -> testDB.executeGroupSQL(sql));
+
+        verifyTablesExist();
     }
 
     @Test
