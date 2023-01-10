@@ -367,7 +367,7 @@ public class DatabaseManagerSQLiteTest {
         assertEquals("Work tasks.", tempGroups.get(1).getDescription());
 
         verify(testStatement, times(1)).executeQuery(selectAllSQL);
-        verify(testQueryResult, times(1)).next();
+        verify(testQueryResult, times(3)).next();
         verify(testQueryResult, times(1)).getInt("ID");
         verify(testQueryResult, times(1)).getString("Name");
         verify(testQueryResult, times(1)).getString("Description");
