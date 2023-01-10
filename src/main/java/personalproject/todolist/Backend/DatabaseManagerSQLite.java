@@ -187,13 +187,23 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
                 return new Group(result.getInt("ID"), result.getString("Name"),
                         result.getString("Description"));
         } catch (Exception e ) {throw new RuntimeException(e);}
-        System.out.println("Final throw"); //
         throw new IllegalArgumentException("No group found.");
     }
 
     @Override
     public Group selectGroupByName(String name) {
-        return null;
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        String selectSQL = """
+                SELECT * FROM \"Groups\" WHERE Name = '%s'""";
+        try (Statement statement = connection.createStatement()) {
+            selectSQL = String.format(selectSQL, name);
+            ResultSet result = statement.executeQuery(selectSQL);
+            if (null != result && result.next())
+                return new Group(result.getInt("ID"), result.getString("Name"),
+                        result.getString("Description"));
+        } catch (Exception e ) {throw new RuntimeException(e);}
+        throw new IllegalArgumentException("No group found.");
     }
 
     @Override
