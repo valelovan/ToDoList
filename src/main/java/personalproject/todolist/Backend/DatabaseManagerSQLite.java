@@ -133,16 +133,18 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
 
     @Override
     public void executeSQL(String sql) {
-
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
     }
 
     @Override
     public List<ToDo> executeToDoSQL(String sql) {
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         return null;
     }
 
     @Override
     public List<Group> executeGroupSQL(String sql) {
+        if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         return null;
     }
 
