@@ -5,7 +5,7 @@ import personalproject.todolist.ToDo;
 
 import java.sql.*;
 import java.io.Closeable;
-import java.util.List;
+import java.util.*;
 
 public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeable {
 
@@ -161,7 +161,17 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     public List<Group> selectAllGroups() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
-        return null;
+        String selectAllSQL = """
+                SELECT * FROM \"Groups\"""";
+        List<Group> tempGroups = new ArrayList<Group>();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet result = statement.executeQuery(selectAllSQL);
+            while (result.next()) {
+                tempGroups.add(new Group(result.getInt("ID"),
+                        result.getString("Name"), result.getString("Description")));
+            }
+        } catch (Exception e) {throw new RuntimeException(e);}
+        return tempGroups;
     }
 
     @Override

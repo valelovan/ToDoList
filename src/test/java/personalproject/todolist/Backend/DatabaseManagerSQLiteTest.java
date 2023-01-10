@@ -368,9 +368,9 @@ public class DatabaseManagerSQLiteTest {
 
         verify(testStatement, times(1)).executeQuery(selectAllSQL);
         verify(testQueryResult, times(3)).next();
-        verify(testQueryResult, times(1)).getInt("ID");
-        verify(testQueryResult, times(1)).getString("Name");
-        verify(testQueryResult, times(1)).getString("Description");
+        verify(testQueryResult, times(2)).getInt("ID");
+        verify(testQueryResult, times(2)).getString("Name");
+        verify(testQueryResult, times(2)).getString("Description");
         verify(testConnection, never()).rollback();
 
         verifyTablesExist();
