@@ -104,7 +104,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     @Override
     public void clearTables() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
         String todoSQL = """
                 DELETE FROM Todos""";
         String groupSQL = """
@@ -119,7 +119,7 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     @Override
     public void deleteTables() {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
-        if (!tablesExist()) throw new IllegalStateException("Tables do not exist.");
+        if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
         String todoSQL = """
                 DROP TABLE Todos""";
         String groupSQL = """
@@ -134,17 +134,20 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     @Override
     public void executeSQL(String sql) {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
     }
 
     @Override
     public List<ToDo> executeToDoSQL(String sql) {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
         return null;
     }
 
     @Override
     public List<Group> executeGroupSQL(String sql) {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
+        if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
         return null;
     }
 
