@@ -135,6 +135,9 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     public void executeSQL(String sql) {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(sql);
+        } catch (Exception e) {throw new RuntimeException(e);}
     }
 
     @Override
