@@ -261,7 +261,19 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testExecuteSQLValid() throws SQLException {
-        //
+        setTablesExist();
+        when(testConnection.isClosed()).thenReturn(false);
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        String sql = """
+                DELETE * FROM Todos WHERE Name = 'Exercise'""";
+
+        testDB.executeSQL(sql);
+
+        verify(testConnection, times(1)).createStatement();
+        verify(testStatement).execute("""
+                DELETE * FROM Todos WHERE Name = 'Exercise'""");
+        verifyTablesExist();
     }
 
     // TESTS: public List<ToDo> executeToDoSQL(String sql);
