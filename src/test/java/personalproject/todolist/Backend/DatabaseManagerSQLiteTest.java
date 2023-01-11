@@ -342,12 +342,60 @@ public class DatabaseManagerSQLiteTest {
 
     @Test
     public void testExecuteGroupValidNoResults() throws SQLException {
-        //
+        setTablesExist();
+        when(testConnection.isClosed()).thenReturn(false);
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        String sql = """
+                SELECT * FROM Groups WHERE Name = 'Exercise'""";
+        when(testStatement.executeQuery(sql)).thenReturn(testResultSet);
+        when(testResultSet.next()).thenReturn(false);
+
+        testDB.executeGroupSQL(sql);
+
+        verify(testConnection, times(1)).createStatement();
+        verify(testStatement).execute("""
+                Select * FROM Groups WHERE Name = 'Exercise'""");
+        verify(testStatement).executeQuery(sql);
+        verify(testResultSet, times(1)).next();
+
+        verifyTablesExist();
     }
 
     @Test
     public void testExecuteGroupValidMultipleResults() throws SQLException {
-        //
+        setTablesExist();
+        when(testConnection.isClosed()).thenReturn(false);
+        when(testConnection.createStatement()).thenReturn(testStatement);
+
+        String sql = """
+                SELECT * FROM Groups WHERE Name = 'Exercise'""";
+        when(testStatement.executeQuery(sql)).thenReturn(testResultSet);
+        when(testResultSet.next()).thenReturn(true).thenReturn(true);
+        when(testResultSet.getInt("ID")).thenReturn(1234).thenReturn(2468);
+        when(testResultSet.getString("Name")).thenReturn("Exercise").thenReturn("School");
+        when(testResultSet.getString("Description"))
+                .thenReturn("Workout routine.").thenReturn("Due dates and projects.");
+
+        List<Group> groups = testDB.executeGroupSQL(sql);
+        assertNotNull(groups);
+        assertFalse(groups.isEmpty());
+        // Index 0
+        assertEquals(1234, groups.get(0).getId());
+        assertEquals("Exercise", groups.get(0).getName());
+        assertEquals("Workout routine.", groups.get(0));
+        // Index 1
+        assertEquals(2468, groups.get(1).getId());
+        assertEquals("School", groups.get(1).getName());
+        assertEquals("Due dates and projects.", groups.get(1));
+
+        verify(testConnection, times(1)).createStatement();
+        verify(testStatement).execute("""
+                Select * FROM Groups WHERE Name = 'Exercise'""");
+        verify(testStatement).executeQuery(sql);
+        verify(testResultSet, times(1)).next();
+
+        verifyTablesExist();
     }
 
     // MISC TEST HELPER METHDOS
