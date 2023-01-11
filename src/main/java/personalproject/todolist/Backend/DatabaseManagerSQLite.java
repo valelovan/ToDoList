@@ -151,7 +151,15 @@ public class DatabaseManagerSQLite implements DatabaseManagerInterface, Closeabl
     public List<Group> executeGroupSQL(String sql) {
         if (!isConnected()) throw new IllegalStateException("No connection in progress.");
         if(!tablesExist()) throw new IllegalStateException("Necessary tables are nonexistent.");
-        return null;
+        List<Group> groups = new ArrayList<Group>();
+        try (Statement statement = connection.createStatement()) {
+            ResultSet results = statement.executeQuery(sql);
+            while(results.next()) {
+                groups.add(new Group(results.getInt("ID"), results.getString("Name"),
+                        results.getString("Description")));
+            }
+        } catch (Exception e) {throw new RuntimeException(e);}
+        return groups;
     }
 
 }

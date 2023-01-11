@@ -348,16 +348,15 @@ public class DatabaseManagerSQLiteTest {
 
         String sql = """
                 SELECT * FROM Groups WHERE Name = 'Exercise'""";
-        when(testStatement.executeQuery(sql)).thenReturn(testResultSet);
-        when(testResultSet.next()).thenReturn(false);
+        when(testStatement.executeQuery(sql)).thenReturn(testQueryResult);
+        when(testQueryResult.next()).thenReturn(false);
 
         testDB.executeGroupSQL(sql);
 
         verify(testConnection, times(1)).createStatement();
-        verify(testStatement).execute("""
-                Select * FROM Groups WHERE Name = 'Exercise'""");
-        verify(testStatement).executeQuery(sql);
-        verify(testResultSet, times(1)).next();
+        verify(testStatement).executeQuery("""
+                SELECT * FROM Groups WHERE Name = 'Exercise'""");
+        verify(testQueryResult, times(1)).next();
 
         verifyTablesExist();
     }
@@ -369,31 +368,31 @@ public class DatabaseManagerSQLiteTest {
         when(testConnection.createStatement()).thenReturn(testStatement);
 
         String sql = """
-                SELECT * FROM Groups WHERE Name = 'Exercise'""";
-        when(testStatement.executeQuery(sql)).thenReturn(testResultSet);
-        when(testResultSet.next()).thenReturn(true).thenReturn(true);
-        when(testResultSet.getInt("ID")).thenReturn(1234).thenReturn(2468);
-        when(testResultSet.getString("Name")).thenReturn("Exercise").thenReturn("School");
-        when(testResultSet.getString("Description"))
+                SELECT * FROM Groups""";
+        when(testStatement.executeQuery(sql)).thenReturn(testQueryResult);
+        when(testQueryResult.next()).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(testQueryResult.getInt("ID")).thenReturn(1234).thenReturn(2468);
+        when(testQueryResult.getString("Name")).thenReturn("Exercise").thenReturn("School");
+        when(testQueryResult.getString("Description"))
                 .thenReturn("Workout routine.").thenReturn("Due dates and projects.");
 
         List<Group> groups = testDB.executeGroupSQL(sql);
         assertNotNull(groups);
         assertFalse(groups.isEmpty());
+        assertEquals(2, groups.size());
         // Index 0
         assertEquals(1234, groups.get(0).getId());
         assertEquals("Exercise", groups.get(0).getName());
-        assertEquals("Workout routine.", groups.get(0));
+        assertEquals("Workout routine.", groups.get(0).getDescription());
         // Index 1
         assertEquals(2468, groups.get(1).getId());
         assertEquals("School", groups.get(1).getName());
-        assertEquals("Due dates and projects.", groups.get(1));
+        assertEquals("Due dates and projects.", groups.get(1).getDescription());
 
         verify(testConnection, times(1)).createStatement();
-        verify(testStatement).execute("""
-                Select * FROM Groups WHERE Name = 'Exercise'""");
-        verify(testStatement).executeQuery(sql);
-        verify(testResultSet, times(1)).next();
+        verify(testStatement).executeQuery("""
+                SELECT * FROM Groups""");
+        verify(testQueryResult, times(3)).next();
 
         verifyTablesExist();
     }
